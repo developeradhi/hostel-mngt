@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import useStore from './store/useStore';
 import Layout from './components/Layout';
-import LandingPage from './pages/LandingPage';
 import Login from './pages/Auth/Login';
 import ToastManager from './components/ToastManager';
 
@@ -39,11 +38,9 @@ function App() {
       <Routes>
         <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to={user.role === 'student' ? '/dashboard' : (user.role === 'warden' ? '/warden/dashboard' : '/admin/dashboard')} />} />
         
-        {/* Landing Page Route */}
-        <Route path="/" element={!isAuthenticated ? <LandingPage /> : <Navigate to={user.role === 'student' ? '/dashboard' : (user.role === 'warden' ? '/warden/dashboard' : '/admin/dashboard')} />} />
-        
         {/* Protected Routes */}
-        <Route element={<Layout />}>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Navigate to={isAuthenticated ? (user.role === 'student' ? '/dashboard' : (user.role === 'warden' ? '/warden/dashboard' : '/admin/dashboard')) : '/login'} />} />
           
           {/* Student Routes */}
           <Route path="dashboard" element={<StudentDashboard />} />
