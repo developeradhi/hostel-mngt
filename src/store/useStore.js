@@ -17,13 +17,18 @@ const useStore = create((set) => ({
     }, 3000);
   },
 
-  login: async (email, password, role) => {
+  login: async (email, password) => {
+    set({ loading: true, error: null });
     try {
-      const res = await api.post('/auth/login', { email, password, role });
-      localStorage.setItem('token', res.data.token);
-      set({ user: res.data, isAuthenticated: true, loading: false });
+      // Role is no longer sent; backend detects it
+      const res = await api.post('/auth/login', { email, password });
+      const { token, user } = res.data;
+      
+      localStorage.setItem('token', token);
+      set({ user: user, isAuthenticated: true, loading: false });
       return { success: true };
     } catch (error) {
+      set({ loading: false });
       return { success: false, message: error.response?.data?.message || 'Login failed' };
     }
   },
