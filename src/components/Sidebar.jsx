@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import useStore from '../store/useStore';
-import { Home, Users, DollarSign, AlertCircle, Calendar, QrCode, LogOut, Camera, ScanLine } from 'lucide-react';
+import { Home, Users, DollarSign, AlertCircle, Calendar, QrCode, LogOut, Camera, ScanLine, Utensils } from 'lucide-react';
 
 const Sidebar = () => {
   const { user, logout } = useStore();
@@ -10,6 +10,7 @@ const Sidebar = () => {
     { to: '/dashboard', label: 'Dashboard', icon: Home },
     { to: '/room', label: 'My Room', icon: Users },
     { to: '/fees', label: 'Fees', icon: DollarSign },
+    { to: '/mess', label: 'Mess Menu', icon: Utensils },
     { to: '/complaints', label: 'Complaints', icon: AlertCircle },
     { to: '/leaves', label: 'Leave Requests', icon: Calendar },
     { to: '/passes', label: 'Visitor Passes', icon: QrCode },

@@ -41,7 +41,7 @@ const Fees = () => {
     <div>
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Fee Details</h1>
-        <p className="text-gray-500 mt-1">Track your monthly rent and miscellaneous fees</p>
+        <p className="text-gray-500 mt-1">Track your monthly rent, electricity billing, and miscellaneous fees</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">

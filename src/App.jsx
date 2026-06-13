@@ -11,6 +11,7 @@ import Fees from './pages/Student/Fees';
 import Complaints from './pages/Student/Complaints';
 import Leaves from './pages/Student/Leaves';
 import Passes from './pages/Student/VisitorPasses';
+import Mess from './pages/Student/Mess';
 
 // Placeholder Pages for Admin
 import AdminDashboard from './pages/Admin/Dashboard';
@@ -48,6 +49,7 @@ function App() {
           <Route path="complaints" element={<Complaints />} />
           <Route path="leaves" element={<Leaves />} />
           <Route path="passes" element={<Passes />} />
+          <Route path="mess" element={<Mess />} />
 
           {/* Admin Routes */}
           <Route path="admin/dashboard" element={<AdminDashboard />} />
