@@ -114,8 +114,8 @@ app.get('/api/dashboard/warden', authenticateToken, async (req, res) => {
 // --- CORE COMPONENTS ROUTES ---
 app.get('/api/rooms', authenticateToken, async (req, res) => {
   res.json([
-    { _id: '1', number: '101', capacity: 2, occupants: 1, status: 'available' },
-    { _id: '2', number: '102', capacity: 2, occupants: 2, status: 'full' }
+    { _id: '1', roomNumber: '101', blockName: 'Block A', capacity: 2, occupants: ['STU001'], status: 'available' },
+    { _id: '2', roomNumber: '102', blockName: 'Block A', capacity: 2, occupants: ['STU002', 'STU003'], status: 'full' }
   ]);
 });
 
