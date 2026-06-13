@@ -4,11 +4,17 @@ const dotenv = require('dotenv');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { PrismaClient } = require('@prisma/client');
+const { Pool } = require('pg');
+const { PrismaPg } = require('@prisma/adapter-pg');
 
 dotenv.config();
 
+const connectionString = process.env.DATABASE_URL;
+const pool = new Pool({ connectionString });
+const adapter = new PrismaPg(pool);
+
 const app = express();
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({ adapter });
 
 app.use(cors());
 app.use(express.json());

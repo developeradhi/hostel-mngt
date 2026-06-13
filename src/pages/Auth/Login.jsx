@@ -81,13 +81,6 @@ const Login = () => {
           </button>
         </form>
 
-        <div className="mt-8 pt-6 border-t border-gray-100">
-          <p className="text-xs text-center text-gray-500">
-            Sample Credentials:<br />
-            Student: student01@college.com / password123<br />
-            Admin: admin@hostel.com / admin123
-          </p>
-        </div>
       </div>
     </div>
   );
