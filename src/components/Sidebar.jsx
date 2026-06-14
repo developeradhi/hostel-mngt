@@ -18,7 +18,7 @@ const Sidebar = () => {
 
   const adminLinks = [
     { to: '/admin/dashboard', label: 'Admin Dashboard', icon: Home },
-    { to: '/admin/students', label: 'Students', icon: Users },
+    { to: '/admin/students', label: 'User Directory', icon: Users },
     { to: '/admin/rooms', label: 'Room Allocation', icon: Users },
     { to: '/admin/fees', label: 'Fee Management', icon: DollarSign },
     { to: '/admin/gate', label: 'AI Gate Verification', icon: Camera },

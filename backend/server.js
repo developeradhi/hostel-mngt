@@ -113,18 +113,98 @@ app.get('/api/dashboard/warden', authenticateToken, async (req, res) => {
 
 // --- CORE COMPONENTS ROUTES ---
 app.get('/api/rooms', authenticateToken, async (req, res) => {
-  res.json([
-    { _id: '1', roomNumber: '101', blockName: 'Block A', capacity: 2, occupants: ['STU001'], status: 'available' },
-    { _id: '2', roomNumber: '102', blockName: 'Block A', capacity: 2, occupants: ['STU002', 'STU003'], status: 'full' }
-  ]);
+  try {
+    const rooms = await prisma.room.findMany({
+      include: { occupants: true }
+    });
+    // Map to frontend expectation
+    const formattedRooms = rooms.map(r => ({
+      _id: r.id,
+      roomNumber: r.number,
+      blockName: 'Main Block', // Default block
+      capacity: r.capacity,
+      occupants: r.occupants.map(o => o.fullName),
+      status: r.occupants.length >= r.capacity ? 'full' : 'available'
+    }));
+    res.json(formattedRooms);
+  } catch (error) {
+    res.status(500).json({ error: 'Server error fetching rooms' });
+  }
+});
+
+app.post('/api/rooms', authenticateToken, async (req, res) => {
+  if (req.user.role !== 'admin') return res.status(403).json({ message: 'Unauthorized' });
+  try {
+    const { roomNumber, capacity } = req.body;
+    const newRoom = await prisma.room.create({
+      data: { number: roomNumber, capacity: parseInt(capacity) || 2 }
+    });
+    res.json(newRoom);
+  } catch (error) {
+    res.status(500).json({ error: 'Could not create room' });
+  }
+});
+
+app.get('/api/users', authenticateToken, async (req, res) => {
+  try {
+    const users = await prisma.user.findMany({
+      include: { room: true }
+    });
+    const formatted = users.map(u => ({
+      _id: u.id,
+      studentId: u.id.substring(0, 6).toUpperCase(),
+      userId: { fullName: u.fullName, email: u.email },
+      roomId: u.room ? { roomNumber: u.room.number } : null,
+      year: '2026',
+      feeStatus: 'paid',
+      role: u.role
+    }));
+    res.json(formatted);
+  } catch (error) {
+    res.status(500).json({ error: 'Server error fetching users' });
+  }
+});
+
+app.post('/api/users', authenticateToken, async (req, res) => {
+  if (req.user.role !== 'admin') return res.status(403).json({ message: 'Unauthorized' });
+  try {
+    const { fullName, email, password, role, roomId } = req.body;
+    const passwordHash = await bcrypt.hash(password, 10);
+    const newUser = await prisma.user.create({
+      data: {
+        fullName,
+        email,
+        passwordHash,
+        role: role || 'student',
+        roomId: roomId || null
+      }
+    });
+    res.json(newUser);
+  } catch (error) {
+    res.status(500).json({ error: 'Could not create user' });
+  }
 });
 
 app.get('/api/students', authenticateToken, async (req, res) => {
-  const students = await prisma.user.findMany({ where: { role: 'student' } });
-  res.json(students.map(s => ({ _id: s.id, name: s.fullName, email: s.email, room: '101', status: 'active' })));
+  // Alias to support older dashboard components expecting /api/students
+  try {
+    const students = await prisma.user.findMany({ where: { role: 'student' }, include: { room: true } });
+    const formatted = students.map(s => ({
+      _id: s.id,
+      studentId: s.id.substring(0, 6).toUpperCase(),
+      userId: { fullName: s.fullName, email: s.email },
+      roomId: s.room ? { roomNumber: s.room.number } : null,
+      year: '2026',
+      feeStatus: 'paid',
+      role: s.role
+    }));
+    res.json(formatted);
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
 });
 
-app.get('/api/students/:id/room', authenticateToken, (req, res) => {
+app.get('/api/students/:id/room', authenticateToken, async (req, res) => {
   res.json({ number: '101', roommates: ['John Doe'], facilities: ['AC', 'Wi-Fi'] });
 });
 
